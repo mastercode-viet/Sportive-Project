@@ -1,32 +1,38 @@
 import type { AuthProvider } from "@refinedev/core";
+import axios from "axios";
 
 export const TOKEN_KEY = "refine-auth";
 
 export const authProvider: AuthProvider = {
-  login: async ({ username, email, password }) => {
-    // Giả lập: chỉ cho phép admin đăng nhập
-    if ((username === "admin" || email === "admin@admin.com") && password === "admin") {
-      const user = {
-        id: 1,
-        name: "Admin",
-        email: email || "admin@admin.com",
-        role: "admin",
-        avatar: "https://i.pravatar.cc/300",
+  login: async ({ email, password }) => {
+    try {
+      const response = await axios.post("http://localhost:3000/api/auth/login", {
+        email,
+        password,
+      });
+
+      const { token, user } = response.data;
+      const userData = {
+        ...user,
+        token,
+        role: "admin", // Assuming the user is admin if login successful
       };
-      localStorage.setItem(TOKEN_KEY, JSON.stringify(user));
+
+      localStorage.setItem(TOKEN_KEY, JSON.stringify(userData));
+      
       return {
         success: true,
         redirectTo: "/admin",
-        user,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: {
+          name: "LoginError",
+          message: error.response?.data?.error || "Invalid email or password",
+        },
       };
     }
-    return {
-      success: false,
-      error: {
-        name: "LoginError",
-        message: "Invalid username or password",
-      },
-    };
   },
   logout: async () => {
     localStorage.removeItem(TOKEN_KEY);

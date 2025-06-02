@@ -1,0 +1,548 @@
+{
+	"info": {
+		"_postman_id": "fa2f0680-85a3-42d7-a1bf-87182a81182b",
+		"name": "Sportive Website",
+		"description": "API Documentation for Sportive E-commerce Website",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/login",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "auth", "login"]
+						},
+						"description": "Login with email and password to get access token"
+					}
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/register",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "auth", "register"]
+						},
+						"description": "Register new user account"
+					}
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/products",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "products"]
+						},
+						"description": "Get list of all products"
+					}
+				},
+				{
+					"name": "Get Product by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/products/:id",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "products", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "product_id_here"
+								}
+							]
+						},
+						"description": "Get product details by ID"
+					}
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Nike Air Max\",\n    \"price\": 199.99,\n    \"description\": \"Classic running shoes\",\n    \"image\": \"path/to/image.jpg\",\n    \"category\": \"category_id_here\",\n    \"stock\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/products",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "products"]
+						},
+						"description": "Create new product (Admin only)"
+					}
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Nike Air Max\",\n    \"price\": 209.99,\n    \"description\": \"Updated description\",\n    \"stock\": 90\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/products/:id",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "products", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "product_id_here"
+								}
+							]
+						},
+						"description": "Update product by ID (Admin only)"
+					}
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/products/:id",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "products", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "product_id_here"
+								}
+							]
+						},
+						"description": "Delete product by ID (Admin only)"
+					}
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Get All Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/categories",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "categories"]
+						},
+						"description": "Get list of all categories"
+					}
+				},
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Running Shoes\",\n    \"description\": \"Athletic footwear for runners\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/categories",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "categories"]
+						},
+						"description": "Create new category (Admin only)"
+					}
+				}
+			]
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Create Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"items\": [\n        {\n            \"product\": \"product_id_here\",\n            \"quantity\": 2\n        }\n    ],\n    \"shippingAddress\": {\n        \"address\": \"123 Main St\",\n        \"city\": \"New York\",\n        \"postalCode\": \"10001\",\n        \"country\": \"USA\"\n    },\n    \"paymentMethod\": \"PayPal\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/orders",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "orders"]
+						},
+						"description": "Create new order"
+					}
+				},
+				{
+					"name": "Get User Orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/orders/myorders",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "orders", "myorders"]
+						},
+						"description": "Get all orders for logged in user"
+					}
+				},
+				{
+					"name": "Get All Orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/orders",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "orders"]
+						},
+						"description": "Get all orders (Admin only)"
+					}
+				},
+				{
+					"name": "Update Order Status",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"shipped\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/orders/:id",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "orders", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "order_id_here"
+								}
+							]
+						},
+						"description": "Update order status (Admin only)"
+					}
+				}
+			]
+		},
+		{
+			"name": "Upload",
+			"item": [
+				{
+					"name": "Upload Image",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/path/to/image.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/upload",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "upload"]
+						},
+						"description": "Upload product image"
+					}
+				}
+			]
+		},
+		{
+			"name": "Products Examples",
+			"item": [
+				{
+					"name": "Create Men's T-Shirt",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Nike Dri-FIT Men's Training T-Shirt\",\n    \"price\": 29.99,\n    \"description\": \"Stay cool and comfortable during your workout with this Nike Dri-FIT training t-shirt. Features moisture-wicking technology and breathable fabric.\",\n    \"image\": \"nike-drifit-tshirt.jpg\",\n    \"category\": \"mens-clothing\",\n    \"stock\": 50,\n    \"details\": {\n        \"brand\": \"Nike\",\n        \"material\": \"100% Polyester\",\n        \"features\": [\n            \"Dri-FIT Technology\",\n            \"Breathable mesh panels\",\n            \"Standard fit\",\n            \"Crew neck\"\n        ],\n        \"sizes\": [\"S\", \"M\", \"L\", \"XL\", \"XXL\"],\n        \"colors\": [\"Black\", \"Grey\", \"Navy Blue\"],\n        \"care\": \"Machine wash cold\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/products",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "products"]
+						},
+						"description": "Create a new men's training t-shirt product"
+					}
+				},
+				{
+					"name": "Create Men's Shorts",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Adidas Men's Training Shorts\",\n    \"price\": 34.99,\n    \"description\": \"Versatile training shorts with moisture-absorbing AEROREADY technology. Perfect for gym workouts and outdoor training.\",\n    \"image\": \"adidas-training-shorts.jpg\",\n    \"category\": \"mens-clothing\",\n    \"stock\": 40,\n    \"details\": {\n        \"brand\": \"Adidas\",\n        \"material\": \"86% Polyester, 14% Elastane\",\n        \"features\": [\n            \"AEROREADY technology\",\n            \"Side pockets\",\n            \"Drawcord elastic waist\",\n            \"Regular fit\"\n        ],\n        \"sizes\": [\"S\", \"M\", \"L\", \"XL\"],\n        \"colors\": [\"Black\", \"Dark Grey\", \"Navy\"],\n        \"care\": \"Machine wash cold, tumble dry low\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/products",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "products"]
+						},
+						"description": "Create a new men's training shorts product"
+					}
+				},
+				{
+					"name": "Create Men's Jacket",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Under Armour Men's Running Jacket\",\n    \"price\": 79.99,\n    \"description\": \"Lightweight running jacket with UA Storm technology that repels water without sacrificing breathability. Perfect for outdoor training in various weather conditions.\",\n    \"image\": \"ua-running-jacket.jpg\",\n    \"category\": \"mens-clothing\",\n    \"stock\": 30,\n    \"details\": {\n        \"brand\": \"Under Armour\",\n        \"material\": \"100% Polyester\",\n        \"features\": [\n            \"UA Storm technology\",\n            \"Water-resistant\",\n            \"Full zip front\",\n            \"Secure hand pockets\",\n            \"Elastic cuffs\",\n            \"Reflective details\"\n        ],\n        \"sizes\": [\"S\", \"M\", \"L\", \"XL\", \"XXL\"],\n        \"colors\": [\"Black\", \"Grey\", \"Blue\"],\n        \"care\": \"Machine wash cold, hang dry\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/products",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "products"]
+						},
+						"description": "Create a new men's running jacket product"
+					}
+				},
+				{
+					"name": "Create Men's Track Pants",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Puma Men's Training Track Pants\",\n    \"price\": 44.99,\n    \"description\": \"Comfortable track pants with dryCELL moisture-wicking technology. Perfect for training and casual wear.\",\n    \"image\": \"puma-track-pants.jpg\",\n    \"category\": \"mens-clothing\",\n    \"stock\": 35,\n    \"details\": {\n        \"brand\": \"Puma\",\n        \"material\": \"88% Polyester, 12% Elastane\",\n        \"features\": [\n            \"dryCELL technology\",\n            \"Zip pockets\",\n            \"Elastic waistband with drawcord\",\n            \"Regular fit\",\n            \"Ankle zippers\"\n        ],\n        \"sizes\": [\"S\", \"M\", \"L\", \"XL\"],\n        \"colors\": [\"Black\", \"Navy\", \"Grey\"],\n        \"care\": \"Machine wash cold\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/products",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["api", "products"]
+						},
+						"description": "Create a new men's track pants product"
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "your_jwt_token_here",
+			"type": "string"
+		}
+	]
+}

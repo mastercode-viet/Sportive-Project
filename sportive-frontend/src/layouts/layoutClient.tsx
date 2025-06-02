@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import HeaderClient from "../components/header/HeaderClient";
-import FooterClient from "../components/footer/FooterClient";
+// import FooterClient from "../components/footer/FooterClient";
+import Footer from "../components/Footer";
 
 function LayoutClient() {
   return (
@@ -9,7 +10,7 @@ function LayoutClient() {
       <main className="flex-1">
         <Outlet />
       </main>
-      <FooterClient />
+      <Footer />
     </div>
   );
 }

@@ -1,9 +1,22 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const { createOrder, getOrders, getOrdersByUser } = require("../controllers/orderController");
+const {
+  getOrders,
+  getOrder,
+  createOrder,
+  updateOrderStatus,
+  updatePaymentStatus,
+  cancelOrder
+} = require('../controllers/orderController');
 
-router.post("/", createOrder);
-router.get("/", getOrders);
-router.get("/:userId", getOrdersByUser);
+// Public routes
+router.post('/', createOrder);
+
+// Admin routes
+router.get('/', getOrders);
+router.get('/:id', getOrder);
+router.patch('/:id/status', updateOrderStatus);
+router.patch('/:id/payment', updatePaymentStatus);
+router.post('/:id/cancel', cancelOrder);
 
 module.exports = router;

@@ -25,6 +25,9 @@ import {  Header } from "./components/header/index";
 import { ColorModeContextProvider } from "./contexts/color-mode";
 import ProductDetailPage from "./userPage/ProductDetailPage";
 import CartPage from "./userPage/CartPage";
+import CheckoutPage from "./userPage/CheckoutPage";
+import About from "./userPage/About";
+import Shop from "./userPage/Shop";
 
 // 🧱 Layouts
 import LayoutClient from "./layouts/layoutClient";
@@ -49,6 +52,10 @@ import {
   CategoryShow,
 } from "./pages/categories";
 import { ProductCreate, ProductEdit, ProductList, ProductShow } from "./pages/products";
+import { OrderList } from "./pages/orders/list";
+import { OrderShow } from "./pages/orders/show";
+
+import axios from "axios";
 
 function App() {
   return (
@@ -58,7 +65,45 @@ function App() {
           <ColorModeContextProvider>
             <AntdApp>
               <Refine
-                dataProvider={dataProvider("http://localhost:3000/api")}
+                dataProvider={{
+                  ...dataProvider("http://localhost:3000/api"),
+                  getOne: async ({ resource, id }) => {
+                    const url = `http://localhost:3000/api/${resource.toLowerCase()}/${id}`;
+                    const response = await axios.get(url);
+                    return {
+                      data: response.data,
+                    };
+                  },
+                  getList: async ({ resource, pagination, sorters }) => {
+                    const url = `http://localhost:3000/api/${resource.toLowerCase()}`;
+                    const response = await axios.get(url);
+                    return {
+                      data: response.data,
+                      total: response.data.length,
+                    };
+                  },
+                  create: async ({ resource, variables }) => {
+                    const url = `http://localhost:3000/api/${resource.toLowerCase()}`;
+                    const response = await axios.post(url, variables);
+                    return {
+                      data: response.data,
+                    };
+                  },
+                  update: async ({ resource, id, variables }) => {
+                    const url = `http://localhost:3000/api/${resource.toLowerCase()}/${id}`;
+                    const response = await axios.put(url, variables);
+                    return {
+                      data: response.data,
+                    };
+                  },
+                  deleteOne: async ({ resource, id }) => {
+                    const url = `http://localhost:3000/api/${resource.toLowerCase()}/${id}`;
+                    const response = await axios.delete(url);
+                    return {
+                      data: response.data,
+                    };
+                  },
+                }}
                 routerProvider={routerBindings}
                 authProvider={authProvider}
                 notificationProvider={useNotificationProvider}
@@ -87,6 +132,15 @@ function App() {
                     show: "/admin/categories/show/:id",
                     meta: { canDelete: true },
                   },
+                  {
+                    name: "orders",
+                    list: "/admin/orders",
+                    show: "/admin/orders/show/:id",
+                    meta: { 
+                      canDelete: false,
+                      label: "Orders"
+                    },
+                  },
                 ]}
                 options={{
                   syncWithLocation: true,
@@ -97,9 +151,11 @@ function App() {
                   {/* 👥 CLIENT ROUTES */}
                   <Route element={<LayoutClient />}>
                     <Route path="/" element={<HomePage />} />
+                    <Route path="/shop" element={<Shop />} />
                     <Route path="/product/:id" element={<ProductDetailPage />} />
                     <Route path="/cart" element={<CartPage />} />
-                    {/* <Route path="/checkout" element={<CheckoutPage />} /> */}
+                    <Route path="/checkout" element={<CheckoutPage />} />
+                    <Route path="/about" element={<About />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                   </Route>
@@ -113,13 +169,13 @@ function App() {
                         v3LegacyAuthProviderCompatible={true}
                         fallback={<CatchAllNavigate to="/login" />}
                       >
-                      <ThemedLayoutV2
-                        Header={Header}
-                        Sider={(props) => <ThemedSiderV2 {...props} fixed />}
-                      >
-                        <Outlet />
-                      </ThemedLayoutV2>
-                    </Authenticated>
+                        <ThemedLayoutV2
+                          Header={Header}
+                          Sider={(props) => <ThemedSiderV2 {...props} fixed />}
+                        >
+                          <Outlet />
+                        </ThemedLayoutV2>
+                      </Authenticated>
                     }
                   >
                     <Route
@@ -134,7 +190,7 @@ function App() {
                       <Route path="show/:id" element={<BlogPostShow />} />
                     </Route>
 
-                     <Route path="products">
+                    <Route path="products">
                       <Route index element={<ProductList />} />
                       <Route path="create" element={<ProductCreate />} />
                       <Route path="edit/:id" element={<ProductEdit />} />
@@ -147,18 +203,23 @@ function App() {
                       <Route path="edit/:id" element={<CategoryEdit />} />
                       <Route path="show/:id" element={<CategoryShow />} />
                     </Route>
+
+                    <Route path="orders">
+                      <Route index element={<OrderList />} />
+                      <Route path="show/:id" element={<OrderShow />} />
+                    </Route>
                   </Route>
 
                   <Route path="/forgot-password" element={<ForgotPassword />} />
                   <Route path="*" element={<ErrorComponent />} />
                 </Routes>
 
-              <RefineKbar />
-              <UnsavedChangesNotifier />
-              <DocumentTitleHandler />
-            </Refine>
-          </AntdApp>
-        </ColorModeContextProvider>
+                <RefineKbar />
+                <UnsavedChangesNotifier />
+                <DocumentTitleHandler />
+              </Refine>
+            </AntdApp>
+          </ColorModeContextProvider>
         </RefineKbarProvider>
       </CartProvider>
     </BrowserRouter>
