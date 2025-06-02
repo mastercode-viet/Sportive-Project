@@ -12,6 +12,8 @@ app.use(express.json());
 
 // Kết nối route
 app.use("/api/products", require("./routes/productRoutes"));
+app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/orders", require("./routes/orderRoutes"));
 
 app.get("/", (req, res) => {
   res.send("Sportive API running...");
