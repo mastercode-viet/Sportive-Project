@@ -3,10 +3,9 @@ const mongoose = require("mongoose");
 const orderSchema = new mongoose.Schema(
   {
     user: {
-      name: { type: String, required: true },
-      email: { type: String, required: true },
-      address: { type: String, required: true },
-      phone: { type: String, required: true }
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
     },
     items: [{
       product: {
@@ -43,6 +42,14 @@ const orderSchema = new mongoose.Schema(
       enum: ['pending', 'paid', 'failed'],
       default: 'pending'
     },
+    shippingInfo: {
+      fullName: { type: String, required: true },
+      email: { type: String, required: true },
+      phone: { type: String, required: true },
+      address: { type: String, required: true },
+      city: { type: String, required: true }
+    },
+    note: { type: String },
     createdAt: {
       type: Date,
       default: Date.now

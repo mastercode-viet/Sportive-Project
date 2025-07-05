@@ -6,11 +6,13 @@ const {
   createOrder,
   updateOrderStatus,
   updatePaymentStatus,
-  cancelOrder
+  cancelOrder,
+  getOrdersByUser
 } = require('../controllers/orderController');
 
 // Public routes
 router.post('/', createOrder);
+router.get('/user/:userId', getOrdersByUser);
 
 // Admin routes
 router.get('/', getOrders);

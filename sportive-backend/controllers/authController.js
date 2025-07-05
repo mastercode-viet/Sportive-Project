@@ -32,10 +32,64 @@ const login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
-    res.json({ token, user: { id: user._id, username: user.username, email: user.email } });
+    res.json({ token, user: { id: user._id, username: user.username, email: user.email, role: user.role, isAdmin: user.isAdmin } });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
 
-module.exports = { register, login };
+const updateAccount = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { username, email, fullName, phone, address } = req.body;
+    // Kiểm tra email hoặc username đã tồn tại cho user khác chưa
+    const existingUser = await User.findOne({
+      $or: [
+        { email, _id: { $ne: userId } },
+        { username, _id: { $ne: userId } }
+      ]
+    });
+    if (existingUser) {
+      return res.status(400).json({ error: "Email hoặc tên đăng nhập đã tồn tại" });
+    }
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { username, email, fullName, phone, address },
+      { new: true, runValidators: true }
+    );
+    res.json({
+      message: "Cập nhật thành công",
+      user: {
+        id: updatedUser._id,
+        username: updatedUser.username,
+        email: updatedUser.email,
+        fullName: updatedUser.fullName,
+        phone: updatedUser.phone,
+        address: updatedUser.address,
+        role: updatedUser.role,
+        isAdmin: updatedUser.isAdmin
+      }
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+const changePassword = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { oldPassword, newPassword } = req.body;
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) return res.status(400).json({ error: "Mật khẩu cũ không đúng" });
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+    res.json({ message: "Đổi mật khẩu thành công" });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+module.exports = { register, login, updateAccount, changePassword };

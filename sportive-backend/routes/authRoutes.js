@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { register, login } = require("../controllers/authController");
+const { register, login, updateAccount, changePassword } = require("../controllers/authController");
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const { authenticate } = require("../middleware/authMiddleware");
 
 router.post("/register", register);
 router.post("/login", login);
@@ -30,5 +31,8 @@ router.post("/create-admin", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+router.put("/update", authenticate, updateAccount);
+router.put("/change-password", authenticate, changePassword);
 
 module.exports = router;
