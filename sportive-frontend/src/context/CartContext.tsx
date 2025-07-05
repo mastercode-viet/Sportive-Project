@@ -15,6 +15,7 @@ interface CartContextType {
   updateQuantity: (itemId: string, quantity: number) => void;
   clearCart: () => void;
   getTotalPrice: () => number;
+  isUserAuthenticated: () => boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -28,6 +29,31 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(items));
   }, [items]);
+
+  // Listen for storage changes to clear cart when user logs out
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'refine-auth' && !e.newValue) {
+        // User logged out, clear cart
+        setItems([]);
+        localStorage.removeItem('cart');
+      }
+    };
+
+    const handleUserLogout = () => {
+      // User logged out, clear cart
+      setItems([]);
+      localStorage.removeItem('cart');
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('userLogout', handleUserLogout);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('userLogout', handleUserLogout);
+    };
+  }, []);
 
   const addToCart = (newItem: CartItem) => {
     setItems((currentItems) => {
@@ -63,10 +89,16 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const clearCart = () => {
     setItems([]);
+    localStorage.removeItem('cart');
   };
 
   const getTotalPrice = () => {
     return items.reduce((total, item) => total + item.price * item.quantity, 0);
+  };
+
+  const isUserAuthenticated = () => {
+    const userStr = localStorage.getItem('refine-auth');
+    return userStr ? true : false;
   };
 
   return (
@@ -78,6 +110,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateQuantity,
         clearCart,
         getTotalPrice,
+        isUserAuthenticated,
       }}
     >
       {children}
