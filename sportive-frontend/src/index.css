@@ -10,6 +10,11 @@
 
   body {
     @apply bg-gray-50;
+    min-height: 100vh;
+    background: linear-gradient(to right, #4f46e5, #a21caf);
+    color: #fff;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
   }
 }
 
@@ -25,4 +30,8 @@
   .input-field {
     @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent;
   }
+}
+
+#root {
+  min-height: 100vh;
 } 
