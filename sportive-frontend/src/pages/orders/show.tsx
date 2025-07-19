@@ -1,7 +1,8 @@
 import { useShow, useUpdate } from "@refinedev/core";
 import { Show, DateField } from "@refinedev/antd";
-import { Typography, Card, Descriptions, Table, Space, Button, Tag, Modal } from "antd";
+import { Typography, Card, Descriptions, Table, Space, Button, Tag, Modal, Select } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -11,6 +12,23 @@ export const OrderShow = () => {
   const { mutate } = useUpdate();
   const { data, isLoading } = queryResult;
   const record = data?.data;
+  const navigate = useNavigate();
+
+  const statusOptions = [
+    { value: 'processing', label: 'Processing' },
+    { value: 'shipped', label: 'Shipped' },
+    { value: 'delivered', label: 'Delivered' },
+  ];
+
+  const handleStatusSelect = async (value: string) => {
+    if (!record?._id) return;
+    await fetch(`http://localhost:3000/api/orders/${record._id}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: value }),
+    });
+    window.location.reload();
+  };
 
   const handleStatusChange = (newStatus: string) => {
     confirm({
@@ -48,6 +66,17 @@ export const OrderShow = () => {
     });
   };
 
+  const handleDeleteOrder = async () => {
+    if (!record?._id) return;
+    if (!window.confirm("Bạn có chắc chắn muốn xóa đơn hàng này?")) return;
+    try {
+      await fetch(`http://localhost:3000/api/orders/${record._id}`, { method: 'DELETE' });
+      navigate('/admin/orders');
+    } catch (err) {
+      alert('Xóa đơn hàng thất bại!');
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
@@ -82,22 +111,17 @@ export const OrderShow = () => {
     <Show isLoading={isLoading}>
       <Title level={5}>Order Details</Title>
       <Card>
+        <Button danger onClick={handleDeleteOrder} style={{ float: 'right', marginBottom: 16 }}>Xóa đơn hàng</Button>
         <Descriptions bordered>
           <Descriptions.Item label="Order ID" span={3}>
             #{record?.id}
           </Descriptions.Item>
-          <Descriptions.Item label="Customer Name" span={2}>
-            {record?.user.name}
-          </Descriptions.Item>
-          <Descriptions.Item label="Phone">
-            {record?.user.phone}
-          </Descriptions.Item>
-          <Descriptions.Item label="Email" span={2}>
-            {record?.user.email}
-          </Descriptions.Item>
-          <Descriptions.Item label="Address" span={3}>
-            {record?.user.address}
-          </Descriptions.Item>
+          <Descriptions.Item label="Customer Name">{record?.shippingInfo?.fullName}</Descriptions.Item>
+          <Descriptions.Item label="Phone">{record?.shippingInfo?.phone}</Descriptions.Item>
+          <Descriptions.Item label="Email">{record?.shippingInfo?.email}</Descriptions.Item>
+          <Descriptions.Item label="Address">{record?.shippingInfo?.address}, {record?.shippingInfo?.city}</Descriptions.Item>
+          <Descriptions.Item label="Note">{record?.note}</Descriptions.Item>
+          <Descriptions.Item label="UserId">{record?.user}</Descriptions.Item>
           <Descriptions.Item label="Order Date">
             <DateField value={record?.createdAt} format="YYYY-MM-DD HH:mm" />
           </Descriptions.Item>
@@ -106,30 +130,13 @@ export const OrderShow = () => {
               <Tag color={getStatusColor(record?.status)}>
                 {record?.status?.toUpperCase()}
               </Tag>
-              {record?.status !== 'delivered' && record?.status !== 'cancelled' && (
-                <Space>
-                  {record?.status === 'pending' && (
-                    <Button size="small" onClick={() => handleStatusChange('processing')}>
-                      Process
-                    </Button>
-                  )}
-                  {record?.status === 'processing' && (
-                    <Button size="small" onClick={() => handleStatusChange('shipped')}>
-                      Ship
-                    </Button>
-                  )}
-                  {record?.status === 'shipped' && (
-                    <Button size="small" onClick={() => handleStatusChange('delivered')}>
-                      Mark Delivered
-                    </Button>
-                  )}
-                  {record?.status === 'pending' && (
-                    <Button size="small" danger onClick={() => handleStatusChange('cancelled')}>
-                      Cancel
-                    </Button>
-                  )}
-                </Space>
-              )}
+              <Select
+                style={{ width: 160 }}
+                value={record?.status}
+                onChange={handleStatusSelect}
+                options={statusOptions}
+                disabled={record?.status === 'cancelled'}
+              />
             </Space>
           </Descriptions.Item>
           <Descriptions.Item label="Payment Status">

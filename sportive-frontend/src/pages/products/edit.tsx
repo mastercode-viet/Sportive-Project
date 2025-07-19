@@ -4,12 +4,14 @@ import { PlusOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import type { UploadFile } from "antd/es/upload/interface";
+import { useNavigate } from "react-router-dom";
 
 export const ProductEdit = () => {
   const [imageUrl, setImageUrl] = useState<string>("");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [uploading, setUploading] = useState(false);
   const { formProps, saveButtonProps, queryResult, onFinish } = useForm();
+  const navigate = useNavigate();
 
   const { selectProps: categorySelectProps } = useSelect({
     resource: "categories",
@@ -39,20 +41,36 @@ export const ProductEdit = () => {
         message.error('Vui lòng tải lên hình ảnh sản phẩm!');
         return;
       }
-
-      // Transform the data before sending
+      const userStr = localStorage.getItem('refine-auth');
+      if (!userStr) {
+        message.error('Không tìm thấy token xác thực. Vui lòng đăng nhập lại!');
+        return;
+      }
+      const user = JSON.parse(userStr);
+      if (!user.token) {
+        message.error('Token không hợp lệ. Vui lòng đăng nhập lại!');
+        return;
+      }
       const transformedValues = {
         ...values,
         image: imageUrl,
         price: Number(values.price),
         stock: Number(values.stock)
       };
-
-      // Call the original onFinish with transformed values
-      await onFinish(transformedValues);
+      const productId = record?._id;
+      await axios.put(`http://localhost:3000/api/products/${productId}`, transformedValues, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`,
+        },
+      });
       message.success('Cập nhật sản phẩm thành công!');
-    } catch (error) {
-      message.error('Lỗi khi cập nhật sản phẩm. Vui lòng thử lại!');
+      navigate('/admin/products');
+    } catch (error: any) {
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        message.error('Bạn không có quyền cập nhật sản phẩm hoặc phiên đăng nhập đã hết hạn!');
+      } else {
+        message.error('Lỗi khi cập nhật sản phẩm. Vui lòng thử lại!');
+      }
       console.error('Error:', error);
     }
   };
@@ -64,7 +82,6 @@ export const ProductEdit = () => {
 
     try {
       setUploading(true);
-      // Get the token from localStorage
       const userStr = localStorage.getItem('refine-auth');
       if (!userStr) {
         throw new Error('Không tìm thấy token xác thực. Vui lòng đăng nhập lại!');

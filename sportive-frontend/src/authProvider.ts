@@ -15,15 +15,20 @@ export const authProvider: AuthProvider = {
       const userData = {
         ...user,
         token,
-        role: "admin", // Assuming the user is admin if login successful
       };
-
       localStorage.setItem(TOKEN_KEY, JSON.stringify(userData));
       
-      return {
-        success: true,
-        redirectTo: "/admin",
-      };
+      if (user.role === "admin") {
+        return {
+          success: true,
+          redirectTo: "/admin",
+        };
+      } else {
+        return {
+          success: true,
+          redirectTo: "/",
+        };
+      }
     } catch (error: any) {
       return {
         success: false,

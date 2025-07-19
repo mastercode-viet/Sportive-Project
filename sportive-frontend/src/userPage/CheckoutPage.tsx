@@ -125,7 +125,7 @@ const CheckoutPage: React.FC = () => {
   if (!isUserAuthenticated()) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-        <HeaderClient />
+      
         <main className="flex-1 flex items-center justify-center p-8">
           <div className="max-w-md mx-auto text-center">
             <div className="w-20 h-20 mx-auto mb-6 bg-blue-100 rounded-full flex items-center justify-center">
@@ -161,7 +161,7 @@ const CheckoutPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-white to-blue-50">
-      <HeaderClient />
+      
 
       <main className="flex-1 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

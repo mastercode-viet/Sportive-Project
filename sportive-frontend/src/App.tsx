@@ -28,6 +28,7 @@ import CartPage from "./userPage/CartPage";
 import CheckoutPage from "./userPage/CheckoutPage";
 import About from "./userPage/About";
 import Shop from "./userPage/Shop";
+import OrderTrackingPage from "./userPage/OrderTrackingPage";
 
 // 🧱 Layouts
 import LayoutClient from "./layouts/layoutClient";
@@ -37,6 +38,7 @@ import HomePage from "./userPage/HomePage";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
 import { ForgotPassword } from "./pages/forgotPassword";
+import AccountPage from "./pages/account";
 
 // 🛠️ Admin Pages
 import {
@@ -54,6 +56,7 @@ import {
 import { ProductCreate, ProductEdit, ProductList, ProductShow } from "./pages/products";
 import { OrderList } from "./pages/orders/list";
 import { OrderShow } from "./pages/orders/show";
+import UserList from "./pages/admin/UserList";
 
 import axios from "axios";
 
@@ -141,6 +144,11 @@ function App() {
                       label: "Orders"
                     },
                   },
+                  {
+                    name: "users",
+                    list: "/admin/users",
+                    meta: { label: "Users", canDelete: true },
+                  },
                 ]}
                 options={{
                   syncWithLocation: true,
@@ -158,6 +166,8 @@ function App() {
                     <Route path="/about" element={<About />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/my-orders" element={<OrderTrackingPage />} />
+                    <Route path="/account" element={<AccountPage />} />
                   </Route>
 
                   {/* 🛠️ ADMIN ROUTES */}
@@ -207,6 +217,10 @@ function App() {
                     <Route path="orders">
                       <Route index element={<OrderList />} />
                       <Route path="show/:id" element={<OrderShow />} />
+                    </Route>
+
+                    <Route path="users">
+                      <Route index element={<UserList />} />
                     </Route>
                   </Route>
 

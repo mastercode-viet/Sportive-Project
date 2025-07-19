@@ -34,7 +34,7 @@ export const ProductList = () => {
           render={(value) => (
             value ? (
               <Image
-                src={value}
+                src={value.startsWith('http') ? value : `http://localhost:3000${value}`}
                 alt="product"
                 style={{ maxWidth: '50px', maxHeight: '50px', objectFit: 'cover' }}
               />

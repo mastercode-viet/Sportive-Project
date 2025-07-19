@@ -11,38 +11,42 @@ interface CartItemProps {
 
 const CartItem: React.FC<CartItemProps> = ({ id, name, price, image, quantity }) => {
   const { updateQuantity, removeFromCart } = useCart();
+  const blue = '#2563eb';
 
   return (
-    <div className="flex items-center gap-4 py-4 border-b">
-      <img src={image} alt={name} className="w-24 h-24 object-cover rounded-md" />
+    <div className="flex items-center gap-4 py-4 border-b" style={{ borderColor: blue + '33' }}>
+      <img src={image} alt={name} className="w-24 h-24 object-cover rounded-md border" style={{ borderColor: blue + '33' }} />
       <div className="flex-1">
-        <h3 className="text-lg font-semibold text-gray-800">{name}</h3>
-        <p className="text-primary font-bold">${price.toFixed(2)}</p>
+        <h3 className="text-lg font-semibold" style={{ color: blue }}>{name}</h3>
+        <p className="font-bold" style={{ color: blue }}>${price.toFixed(2)}</p>
         <div className="flex items-center gap-4 mt-2">
-          <div className="flex items-center border rounded-md">
+          <div className="flex items-center border rounded-md" style={{ borderColor: blue + '33' }}>
             <button
               onClick={() => updateQuantity(id, Math.max(0, quantity - 1))}
-              className="px-3 py-1 text-gray-600 hover:bg-gray-100"
+              className="px-3 py-1 hover:bg-blue-50 transition"
+              style={{ color: blue }}
             >
               -
             </button>
-            <span className="px-3 py-1 border-x">{quantity}</span>
+            <span className="px-3 py-1 border-x" style={{ borderColor: blue + '33', color: blue }}>{quantity}</span>
             <button
               onClick={() => updateQuantity(id, quantity + 1)}
-              className="px-3 py-1 text-gray-600 hover:bg-gray-100"
+              className="px-3 py-1 hover:bg-blue-50 transition"
+              style={{ color: blue }}
             >
               +
             </button>
           </div>
           <button
             onClick={() => removeFromCart(id)}
-            className="text-red-500 hover:text-red-700"
+            className="font-semibold transition"
+            style={{ color: '#e11d48' }}
           >
-            Remove
+            Xóa
           </button>
         </div>
       </div>
-      <div className="text-lg font-bold">
+      <div className="text-lg font-bold" style={{ color: blue }}>
         ${(price * quantity).toFixed(2)}
       </div>
     </div>
