@@ -6,6 +6,7 @@ import { useParams, Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { useCart } from "../context/CartContext"
 import FooterClient from "../components/footer/FooterClient"
+import CommentSection from "../components/CommentSection"
 import { message } from "antd"
 
 interface Product {
@@ -443,6 +444,13 @@ const ProductDetailPage: React.FC = () => {
           </div>
         </div>
       </main>
+
+      {/* Comments Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <CommentSection productId={id!} />
+        </div>
+      </section>
 
       {/* Related Products */}
       <section className="py-16 bg-gray-50">

@@ -57,6 +57,7 @@ import { ProductCreate, ProductEdit, ProductList, ProductShow } from "./pages/pr
 import { OrderList } from "./pages/orders/list";
 import { OrderShow } from "./pages/orders/show";
 import UserList from "./pages/admin/UserList";
+import CommentList from "./pages/admin/CommentList";
 
 import axios from "axios";
 
@@ -149,6 +150,11 @@ function App() {
                     list: "/admin/users",
                     meta: { label: "Users", canDelete: true },
                   },
+                  {
+                    name: "comments",
+                    list: "/admin/comments",
+                    meta: { label: "Comments", canDelete: true },
+                  },
                 ]}
                 options={{
                   syncWithLocation: true,
@@ -221,6 +227,10 @@ function App() {
 
                     <Route path="users">
                       <Route index element={<UserList />} />
+                    </Route>
+
+                    <Route path="comments">
+                      <Route index element={<CommentList />} />
                     </Route>
                   </Route>
 
