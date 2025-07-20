@@ -1,6 +1,6 @@
 "use client"
 
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { ShoppingCart, Menu, X, Search, User, Bell, Heart } from "lucide-react"
 import { Dropdown, Menu as AntdMenu, Badge } from "antd"
@@ -11,6 +11,8 @@ export default function HeaderClient() {
   const [user, setUser] = useState<any>(null)
   const [isScrolled, setIsScrolled] = useState(false)
   const { clearCart, items } = useCart()
+  const [searchValue, setSearchValue] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleStorage = () => {
@@ -165,6 +167,13 @@ export default function HeaderClient() {
                 type="text"
                 placeholder="Tìm kiếm sản phẩm..."
                 className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-all duration-300 text-sm"
+                value={searchValue}
+                onChange={e => setSearchValue(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === "Enter" && searchValue.trim()) {
+                    navigate(`/shop?search=${encodeURIComponent(searchValue.trim())}`)
+                  }
+                }}
               />
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                 <kbd className="px-2 py-1 text-xs text-gray-500 bg-gray-200 rounded">⌘K</kbd>

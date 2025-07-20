@@ -20,6 +20,7 @@ interface Product {
     name: string
     description?: string
   }
+  stock: number // thêm trường stock
 }
 
 const ProductDetailPage: React.FC = () => {
@@ -299,11 +300,14 @@ const ProductDetailPage: React.FC = () => {
                       <button
                         onClick={() => setQuantity(quantity + 1)}
                         className="px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-200 font-medium"
+                        disabled={quantity >= (product.stock || 0)}
                       >
                         +
                       </button>
                     </div>
-                    <span className="text-sm text-gray-500">Còn lại 50 sản phẩm</span>
+                    <span className="text-sm text-gray-500">
+                      Còn lại {product.stock ?? 0} sản phẩm
+                    </span>
                   </div>
                 </div>
 

@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Hero() {
   return (
@@ -9,11 +10,11 @@ export default function Hero() {
           <div className="space-y-8">
             <div className="space-y-4">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
-                Bộ sưu tập quần áo chất
+                Bộ sưu tập giày thể thao chất
                 <span className="block text-blue-400">thời trang 2025</span>
               </h1>
               <p className="text-xl text-gray-300 max-w-lg">
-                Khám phá những đôi quần áo chất lượng cao từ các thương hiệu nổi tiếng thế giới với mức giá tốt nhất
+                Khám phá những đôi giày chất lượng cao từ các thương hiệu nổi tiếng thế giới với mức giá tốt nhất
               </p>
             </div>
 
@@ -22,9 +23,10 @@ export default function Hero() {
                 Mua sắm ngay
                 <ArrowRight className="h-5 w-5" />
               </button>
-              <button className="border-2 border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4 rounded-lg font-semibold transition-all duration-300">
+              <Link to ="/shop"> <button className="border-2 border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4 rounded-lg font-semibold transition-all duration-300">
                 Xem bộ sưu tập
-              </button>
+              </button></Link>
+             
             </div>
 
             <div className="flex items-center gap-8 pt-8">

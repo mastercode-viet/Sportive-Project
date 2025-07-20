@@ -3,6 +3,7 @@ import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import FooterClient from '../components/footer/FooterClient';
 import { Search, Filter } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
 interface Product {
   _id: string;
@@ -30,6 +31,7 @@ const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({ min: 0, max: 1000 });
   const [sortBy, setSortBy] = useState('newest');
+  const location = useLocation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,6 +51,13 @@ const Shop = () => {
 
     fetchData();
   }, []);
+
+  // Lấy search từ query string nếu có
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const search = params.get('search') || '';
+    setSearchTerm(search);
+  }, [location.search]);
 
   const filteredProducts = products
     .filter(product => 

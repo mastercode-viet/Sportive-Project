@@ -6,6 +6,7 @@ import ProductCard from "../components/ProductCard"
 import axios from "axios"
 import FooterClient from "../components/footer/FooterClient"
 import Hero from "../components/Hero"
+import { Link } from "react-router-dom"
 
 interface Product {
   _id: string
@@ -51,26 +52,8 @@ const HomePage: React.FC = () => {
     )
   }
 
-  const featuredCategories = [
-    {
-      name: "Áo thun thể thao",
-      description: "Thoáng mát, co giãn tốt",
-      image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=300&fit=crop",
-      color: "from-blue-500 to-blue-600",
-    },
-    {
-      name: "Áo gió thể thao",
-      description: "Chống gió, nhẹ nhàng",
-      image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=300&fit=crop",
-      color: "from-green-500 to-green-600",
-    },
-    {
-      name: "Quần thể thao",
-      description: "Thoải mái, linh hoạt",
-      image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=300&fit=crop",
-      color: "from-purple-500 to-purple-600",
-    },
-  ]
+  // Lấy 3 sản phẩm đầu tiên làm featured
+  const featuredProducts = products.slice(0, 3)
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -97,7 +80,7 @@ const HomePage: React.FC = () => {
                   Sportive
                 </span>
                 <span className="block text-yellow-400 text-3xl md:text-4xl lg:text-5xl mt-2">
-                  Quần áo thể thao nam
+                  Giày thể thao nam
                 </span>
               </h1>
 
@@ -121,9 +104,10 @@ const HomePage: React.FC = () => {
                   </svg>
                 </span>
               </button>
-              <button className="border-2 border-white text-white hover:bg-white hover:text-blue-700 font-bold py-4 px-8 rounded-full transition-all duration-300 backdrop-blur-sm">
+              <Link to ="/shop"><button className="border-2 border-white text-white hover:bg-white hover:text-blue-700 font-bold py-4 px-8 rounded-full transition-all duration-300 backdrop-blur-sm">
                 Xem bộ sưu tập
-              </button>
+              </button></Link>
+              
             </div>
           </div>
         </div>
@@ -158,30 +142,31 @@ const HomePage: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {featuredCategories.map((category, index) => (
-                <div
-                  key={category.name}
+              {featuredProducts.map((product) => (
+                <Link
+                  key={product._id}
+                  to={`/product/${product._id}`}
                   className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
                 >
                   <div className="aspect-[4/3] relative">
                     <img
-                      src={category.image || "/placeholder.svg"}
-                      alt={category.name}
+                      src={product.image.startsWith('http') ? product.image : `http://localhost:3000${product.image}`}
+                      alt={product.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
                     <div
-                      className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-60 group-hover:opacity-70 transition-opacity`}
+                      className={`absolute inset-0 bg-gradient-to-t from-slate-100-500 to-blue-600 opacity-60 group-hover:opacity-70 transition-opacity`}
                     ></div>
                   </div>
 
                   <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
                     <div className="transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                      <h3 className="text-2xl font-bold mb-2">{category.name}</h3>
+                      <h3 className="text-2xl font-bold mb-2">{product.name}</h3>
                       <p className="text-blue-100 mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
-                        {category.description}
+                        {product.description}
                       </p>
-                      <button className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 opacity-0 group-hover:opacity-100 delay-200">
-                        <span>Xem thêm</span>
+                      <span className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 opacity-0 group-hover:opacity-100 delay-200">
+                        <span>Xem chi tiết</span>
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path
                             strokeLinecap="round"
@@ -190,10 +175,10 @@ const HomePage: React.FC = () => {
                             d="M17 8l4 4m0 0l-4 4m4-4H3"
                           />
                         </svg>
-                      </button>
+                      </span>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </section>

@@ -8,7 +8,7 @@ export default function Footer() {
           {/* Company Info */}
           <div className="space-y-4">
             <h3 className="text-2xl font-bold">
-              NOU<span className="text-blue-400">SHOES</span>
+              SPORT<span className="text-blue-400">SHOES</span>
             </h3>
             <p className="text-gray-400">
               Chuyên cung cấp giày dép chất lượng cao từ các thương hiệu nổi tiếng thế giới với mức giá tốt nhất tại Việt Nam.
@@ -78,7 +78,7 @@ export default function Footer() {
               <div className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-blue-400 mt-0.5 flex-shrink-0" />
                 <span className="text-gray-400">
-                  123 Đường ABC, Quận 1, TP.HCM, Việt Nam
+                  123 Đường Nguyễn Khoái, Quận Hoàng Mai, Hà Nội , Việt Nam
                 </span>
               </div>
               <div className="flex items-center gap-3">
@@ -87,7 +87,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-blue-400 flex-shrink-0" />
-                <span className="text-gray-400">info@noushoes.com</span>
+                <span className="text-gray-400">sportive@gmail.com</span>
               </div>
             </div>
 
