@@ -155,6 +155,7 @@ function App() {
                     list: "/admin/comments",
                     meta: { label: "Comments", canDelete: true },
                   },
+                  { name: "dashboard", list: "/admin/dashboard", meta: { label: "Dashboard" } },
                 ]}
                 options={{
                   syncWithLocation: true,
@@ -196,7 +197,7 @@ function App() {
                   >
                     <Route
                       index
-                      element={<NavigateToResource resource="blog_posts" />}
+                      element={<NavigateToResource resource="dashboard" />}
                     />
 
                     <Route path="blog-posts">
@@ -232,6 +233,8 @@ function App() {
                     <Route path="comments">
                       <Route index element={<CommentList />} />
                     </Route>
+
+                    <Route path="dashboard" element={<Dashboard />} />
                   </Route>
 
                   <Route path="/forgot-password" element={<ForgotPassword />} />

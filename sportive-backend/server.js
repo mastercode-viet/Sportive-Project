@@ -4,7 +4,12 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const path = require("path");
 
+// Đọc biến môi trường từ file .env
 dotenv.config();
+
+// Kiểm tra biến môi trường đã load chưa
+console.log("OPENAI_API_KEY:", process.env.OPENAI_API_KEY ? "Loaded" : "Missing");
+
 const app = express();
 connectDB();
 
@@ -22,6 +27,7 @@ app.use("/api/comments", require("./routes/commentRoutes"));
 const categoryRoutes = require('./routes/categoryRoutes');
 app.use('/api/categories', categoryRoutes);
 app.use("/api/upload", require("./routes/uploadRoutes"));
+app.use("/api/admin", require("./routes/adminRoutes"));
 
 app.get("/", (req, res) => {
   res.send("Sportive API running...");
