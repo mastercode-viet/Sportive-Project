@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { register, login, updateAccount, changePassword } = require("../controllers/authController");
+const { register, login, updateAccount, changePassword, getAllUsers } = require("../controllers/authController");
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-const { authenticate } = require("../middleware/authMiddleware");
+const { authenticate, authorize } = require("../middleware/authMiddleware");
 
 router.post("/register", register);
 router.post("/login", login);
@@ -32,7 +32,13 @@ router.post("/create-admin", async (req, res) => {
   }
 });
 
+// Lấy danh sách user (admin)
+router.get("/users", authenticate, authorize("admin"), getAllUsers);
+
 router.put("/update", authenticate, updateAccount);
 router.put("/change-password", authenticate, changePassword);
+
+// Xóa user theo id (admin)
+router.delete("/delete/:id", authenticate, authorize("admin"), require("../controllers/authController").deleteUserById);
 
 module.exports = router;

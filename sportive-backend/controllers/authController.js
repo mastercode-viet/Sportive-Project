@@ -92,4 +92,26 @@ const changePassword = async (req, res) => {
   }
 };
 
-module.exports = { register, login, updateAccount, changePassword };
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({}, '-password').lean();
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const deleteUserById = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+    if (user.role === "admin") return res.status(403).json({ error: "Không thể xóa tài khoản admin" });
+    await User.findByIdAndDelete(userId);
+    res.json({ message: "Đã xóa user" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+module.exports = { register, login, updateAccount, changePassword, getAllUsers, deleteUserById };

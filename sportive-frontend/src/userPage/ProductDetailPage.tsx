@@ -24,13 +24,18 @@ interface Product {
 const ProductDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const [product, setProduct] = useState<Product | null>(null)
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+  const [relatedLoading, setRelatedLoading] = useState(true)
   const [quantity, setQuantity] = useState(1)
   const [imageLoading, setImageLoading] = useState(true)
   const { addToCart } = useCart()
   const navigate = useNavigate()
 
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0)
+    
     const fetchProduct = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/api/products/${id}`)
@@ -43,7 +48,27 @@ const ProductDetailPage: React.FC = () => {
       }
     }
 
+    const fetchRelatedProducts = async () => {
+      try {
+        // Fetch all products and filter to get related ones (same category or random)
+        const response = await axios.get("http://localhost:3000/api/products")
+        const allProducts = response.data
+        
+        // Filter out current product and get up to 4 related products
+        const filteredProducts = allProducts
+          .filter((p: Product) => p._id !== id)
+          .slice(0, 4)
+        
+        setRelatedProducts(filteredProducts)
+        setRelatedLoading(false)
+      } catch (error) {
+        console.error("Error fetching related products:", error)
+        setRelatedLoading(false)
+      }
+    }
+
     fetchProduct()
+    fetchRelatedProducts()
   }, [id])
 
   if (loading) {
@@ -418,6 +443,56 @@ const ProductDetailPage: React.FC = () => {
           </div>
         </div>
       </main>
+
+      {/* Related Products */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Sản phẩm liên quan</h2>
+            <p className="text-gray-600 text-lg">Khám phá thêm các sản phẩm tương tự</p>
+          </div>
+          
+          {relatedLoading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-600 border-t-transparent"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {relatedProducts.map((relatedProduct) => {
+                const imageUrl = relatedProduct.image.startsWith("http") 
+                  ? relatedProduct.image 
+                  : `http://localhost:3000${relatedProduct.image}`
+                
+                return (
+                  <Link
+                    key={relatedProduct._id}
+                    to={`/product/${relatedProduct._id}`}
+                    className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+                  >
+                    <div className="aspect-square relative overflow-hidden">
+                      <img
+                        src={imageUrl}
+                        alt={relatedProduct.name}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <div className="p-6">
+                      <h3 className="font-semibold text-gray-900 mb-2">{relatedProduct.name}</h3>
+                      <p className="text-gray-600 text-sm mb-3">{relatedProduct.description}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-lg font-bold text-blue-600">${relatedProduct.price.toFixed(2)}</span>
+                        <span className="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg">
+                          Xem chi tiết
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      </section>
 
       <FooterClient />
     </div>
